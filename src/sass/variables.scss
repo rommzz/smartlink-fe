@@ -1,0 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700;800&display=swap');
+
+$font-family:'Overpass';
+
+.v-application {
+  [class*='text-'] {
+    color: #36405a;
+    font-family: $font-family, sans-serif !important;
+  }
+  font-family: $font-family, sans-serif !important;
+}
