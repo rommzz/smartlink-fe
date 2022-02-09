@@ -42,12 +42,12 @@
                 {{item.nama}}
               </div>
               <div class="mid-grey--text" style="line-height: 1; font-size: 12px">
-                {{ `${item.nominal} x ${item.id == 1 ? '1' : data.total_kehadiran} ${item.jenis}` }} 
+                {{ `${item.nominal | formatNumber} x ${item.id == 1 ? '1' : data.total_kehadiran} ${item.jenis}` }} 
               </div>
             </div>
             <div>
               <span class="black--text" style="font-size: 14px"> 
-                {{ valueGaji(item.nominal, item.id) }}
+                {{ valueGaji(item.nominal, item.id) | formatNumber }}
               </span>
               <v-icon class="ml-1" color="primary" @click="show()">
                 mdi-square-edit-outline
@@ -61,7 +61,7 @@
               subtotal Gaji
             </span>
             <span class="title-card" style="font-weight: 600">
-              {{ subtotalGaji() }}
+              {{ subtotalGaji() | formatRupiah }}
             </span>
           </div>
         </template>
@@ -97,7 +97,7 @@
               subtotal Gaji
             </span>
             <span class="title-card" style="font-weight: 600">
-              {{ subtotalUpah() }}
+              {{ subtotalUpah() | formatRupiah}}
             </span>
           </div>
         </template>
@@ -141,7 +141,7 @@
               subtotal Komisi
             </span>
             <span class="title-card" style="font-weight: 600">
-              {{ subtotalKomisi() }}
+              {{ subtotalKomisi() | formatRupiah}}
             </span>
           </div>
         </template>
@@ -153,7 +153,7 @@
             total gaji kotor
           </span>
           <span>
-            {{ subtotalGaji() + subtotalKomisi() + subtotalUpah() }}
+            {{ (subtotalGaji() + subtotalKomisi() + subtotalUpah()) | formatRupiah }}
           </span>
         </v-card-text>
       </v-card>
@@ -200,8 +200,8 @@
             <span class="title-card" style="font-weight: 600">
               Tanggungan dibayar
             </span>
-            <span class="title-card" style="font-weight: 600">
-              (-){{ subtotalTanggungan() }}
+            <span class="title-card error--text" style="font-weight: 600">
+              (-){{ subtotalTanggungan() | formatRupiah}}
             </span>
           </div>
         </template>
@@ -243,6 +243,7 @@
 import Axios from "axios"
 import baseCard from "../components/BaseCard.vue"
 import ModalKehadiran from '../components/ModalKehadiran.vue'
+import '../plugins/filter'
 
 export default {
   name: 'Inquiry',
