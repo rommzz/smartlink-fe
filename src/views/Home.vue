@@ -49,7 +49,7 @@
               <span class="black--text" style="font-size: 14px"> 
                 {{ valueGaji(item.nominal, item.id) }}
               </span>
-              <v-icon class="ml-1" color="primary">
+              <v-icon class="ml-1" color="primary" @click="show()">
                 mdi-square-edit-outline
               </v-icon>
             </div>
@@ -234,15 +234,19 @@
         </v-card-text>
       </v-card>
     </template>
+    <modal-kehadiran ref="modalKehadiran">
+    </modal-kehadiran>
   </div>
 </template>
 
 <script>
 import Axios from "axios"
 import baseCard from "../components/BaseCard.vue"
+import ModalKehadiran from '../components/ModalKehadiran.vue'
+
 export default {
   name: 'Inquiry',
-  components: { baseCard },
+  components: { baseCard, ModalKehadiran },
   data () {
     return {
       data: {},
@@ -327,6 +331,9 @@ export default {
         });
         return total
       }
+    },
+    show() {
+      this.$refs.modalKehadiran.show()
     }
   },
   async created () {
