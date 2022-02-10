@@ -24,48 +24,14 @@
             <span style="font-weight: 600">
               Masuk {{ data.total_kehadiran }} Hari
             </span>
-            <span class="primary--text" style="font-weight: 600">
+            <a class="primary--text" style="font-weight: 600" @click="showModalKehadiran(data.total_kehadiran)">
               Ubah kehadiran
-            </span>
+            </a>
           </div>
         </template>
       </base-card>
-
-      <base-card>
-        <template v-slot:header>
-          <span>gaji</span>
-        </template>
-        <template v-slot:body>
-          <div v-for="(item, index) in data.pengaturan_gaji" :key="index" class="py-2 d-flex justify-space-between align-center">
-            <div>
-              <div class="black--text" style="line-height: 1;font-size: 14px">
-                {{item.nama}}
-              </div>
-              <div class="mid-grey--text" style="line-height: 1; font-size: 12px">
-                {{ `${item.nominal | formatNumber} x ${item.id == 1 ? '1' : data.total_kehadiran} ${item.jenis}` }} 
-              </div>
-            </div>
-            <div>
-              <span class="black--text" style="font-size: 14px"> 
-                {{ valueGaji(item.nominal, item.id) | formatNumber }}
-              </span>
-              <v-icon class="ml-1" color="primary" @click="show()">
-                mdi-square-edit-outline
-              </v-icon>
-            </div>
-          </div>
-        </template>
-        <template v-slot:footer>
-          <div class="d-flex justify-space-between">
-            <span class="title-card" style="font-weight: 600">
-              subtotal Gaji
-            </span>
-            <span class="title-card" style="font-weight: 600">
-              {{ subtotalGaji() | formatRupiah }}
-            </span>
-          </div>
-        </template>
-      </base-card>
+      
+      <gaji-data ref="gajiData" :propsData="data.pengaturan_gaji" :propsKehadiran="data.total_kehadiran" :propsPeriode="data.total_periode"/>
 
       <base-card>
         <template v-slot:header>
@@ -83,7 +49,7 @@
             </div>
             <div>
               <span class="black--text" style="font-size: 14px"> 
-                {{ pengerjaan_upah(item.id).nominal * item.nominal }}
+                {{ (pengerjaan_upah(item.id).nominal * item.nominal) | formatNumber }}
               </span>
               <v-icon class="ml-1" color="primary">
                 mdi-square-edit-outline
@@ -127,7 +93,7 @@
             </div>
             <div class="">
               <span class="" style="font-size: 14px"> 
-                {{ item.nominal }}
+                {{ item.nominal | formatNumber}}
               </span>
               <v-icon class="ml-1" color="primary">
                 mdi-square-edit-outline
@@ -187,7 +153,7 @@
             </div>
             <div class="error--text">
               <span class="" style="font-size: 14px"> 
-                {{ item.nominal }}
+                {{ item.nominal | formatNumber }}
               </span>
               <v-icon class="ml-1" color="error">
                 mdi-square-edit-outline
@@ -218,7 +184,7 @@
               </v-icon>
             </div>
             <span>
-              {{subtotalGaji() + subtotalKomisi() + subtotalUpah() - subtotalTanggungan() }}
+              {{ (subtotalGaji() + subtotalKomisi() + subtotalUpah() - subtotalTanggungan()) | formatRupiah }}
             </span>
           </div>
           <div class="py-2" style="line-height: 18px">
@@ -234,7 +200,7 @@
         </v-card-text>
       </v-card>
     </template>
-    <modal-kehadiran ref="modalKehadiran">
+    <modal-kehadiran @savedata="v => data.total_kehadiran = v" ref="modalKehadiran">
     </modal-kehadiran>
   </div>
 </template>
@@ -243,11 +209,13 @@
 import Axios from "axios"
 import baseCard from "../components/BaseCard.vue"
 import ModalKehadiran from '../components/ModalKehadiran.vue'
-import '../plugins/filter'
+import '@/plugins/filter'
+import gajiData from "@/components/gaji/gajiData.vue"
+
 
 export default {
   name: 'Inquiry',
-  components: { baseCard, ModalKehadiran },
+  components: { baseCard, ModalKehadiran, gajiData },
   data () {
     return {
       data: {},
@@ -278,6 +246,10 @@ export default {
             nominal: 20000
           }
         ]
+        this.$store.commit('SET_SUBTOTAL_GAJI', this.subtotalGaji())
+        this.$store.commit('SET_SUBTOTAL_UPAH', this.subtotalUpah())
+        this.$store.commit('SET_SUBTOTAL_KOMISI', this.subtotalKomisi())
+        this.$store.commit('SET_SUBTOTAL_TANGGUNGAN', this.subtotalTanggungan())
       }).catch(e => {
         console.log(e);
       }).finally(() => {
@@ -333,8 +305,8 @@ export default {
         return total
       }
     },
-    show() {
-      this.$refs.modalKehadiran.show()
+    showModalKehadiran(v) {
+      this.$refs.modalKehadiran.show(v)
     }
   },
   async created () {
@@ -343,10 +315,3 @@ export default {
 
 }
 </script>
-<style scoped>
-.title-card{
-  font-size: 16px;
-  color: black;
-  text-transform: capitalize;
-}
-</style>

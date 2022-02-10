@@ -19,13 +19,13 @@
       </div>
       <v-row class="mt-3">
         <v-col class="pr-0">
-          <v-btn class="col-6 text-none" block outlined color="error">
+          <v-btn @click="hari = 0" class="col-6 text-none" block outlined color="error">
             hapus
           </v-btn>
         </v-col>
         <div class="pl-1" />
         <v-col class="pl-0">
-          <v-btn class="col-6 text-none" block depressed color="primary">
+          <v-btn class="col-6 text-none" block depressed color="primary" @click="save()">
             simpan
           </v-btn>
         </v-col>
@@ -46,8 +46,13 @@ export default {
     }
   },
   methods: {
-    show() {
+    show(v) {
+      this.hari = v
       this.$refs.modal.show()
+    },
+    save() {
+      this.$emit('savedata', this.hari)
+      this.$refs.modal.close()
     }
   }
 }

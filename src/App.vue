@@ -19,3 +19,10 @@ export default {
   }
 };
 </script>
+<style>
+.title-card{
+  font-size: 16px;
+  color: black;
+  text-transform: capitalize;
+}
+</style>
