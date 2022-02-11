@@ -48,54 +48,7 @@
         </v-card-text>
       </v-card>
 
-      <base-card>
-        <template v-slot:header>
-          <span>tanggungan</span>
-          <div style="line-height: 1">
-            <span class="mid-grey--text" style="line-height: 1; font-size: 12px; font-weight: normal">
-              karyawan ini memiliki tanggungan
-            </span>
-          </div>
-        </template>
-        <template v-slot:body>
-          <div>
-            <v-icon color="primary">
-              mdi-plus-circle-outline
-            </v-icon>
-            <span class="primary--text">
-              Tambah pembayaran tanggungan...
-            </span>
-          </div>
-          <div v-for="(item, index) in data.tanggungan" :key="index" class="py-2 d-flex justify-space-between align-center">
-            <div class="pr-2">
-              <div class="black--text text-capitalize" style="font-size: 14px">
-                {{ item.nama }}
-              </div>
-              <div class="mid-grey--text" style="line-height: 0.5; font-size: 12px">
-                {{ item.keterangan }} 
-              </div>
-            </div>
-            <div class="error--text">
-              <span class="" style="font-size: 14px"> 
-                {{ item.nominal | formatNumber }}
-              </span>
-              <v-icon class="ml-1" color="error">
-                mdi-square-edit-outline
-              </v-icon>
-            </div>
-          </div>
-        </template>
-        <template v-slot:footer>
-          <div class="d-flex justify-space-between">
-            <span class="title-card" style="font-weight: 600">
-              Tanggungan dibayar
-            </span>
-            <span class="title-card error--text" style="font-weight: 600">
-              (-){{ subtotalTanggungan() | formatRupiah}}
-            </span>
-          </div>
-        </template>
-      </base-card>
+      <tanggungan-data :propsData="data"/>
       <v-card>
         <v-card-text>
           <div class="primary--text d-flex justify-space-between pb-2" style="font-size: 20px; font-weight: 800;">
@@ -137,10 +90,11 @@ import '@/plugins/filter'
 import gajiData from "@/components/gaji/gajiData.vue"
 import BoronganData from '../components/borongan/BoronganData.vue'
 import KomisiData from "../components/komisi/KomisiData.vue"
+import TanggunganData from "../components/tanggungan/TanggunganData.vue"
 
 export default {
   name: 'Inquiry',
-  components: { baseCard, ModalKehadiran, gajiData, BoronganData, KomisiData },
+  components: { baseCard, ModalKehadiran, gajiData, BoronganData, KomisiData, TanggunganData },
   data () {
     return {
       data: {},
@@ -208,28 +162,24 @@ export default {
       return total
     },
     subtotalKomisi() {
-      if (!this.data.komisi.length) {
-        return 0
-      }
-      else {
-        let total = 0
+      let total = 0
+      if (this.data.komisi.length) {
         this.data.komisi.forEach(item => {
           total = total + item.nominal
         });
-        return total
       }
+      this.$store.commit('SET_SUBTOTAL_KOMISI', total)
+      return total
     },
     subtotalTanggungan () {
-      if (!this.data.tanggungan.length) {
-        return 0
-      }
-      else {
-        let total = 0
+      let total = 0
+      if (this.data.tanggungan.length) {
         this.data.tanggungan.forEach(item => {
           total = total + item.nominal
         });
-        return total
       }
+      this.$store.commit('SET_SUBTOTAL_TANGGUNGAN', total)
+      return total
     },
     showModalKehadiran(v) {
       this.$refs.modalKehadiran.show(v)
