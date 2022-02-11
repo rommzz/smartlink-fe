@@ -12,7 +12,7 @@
         type="number"
         placeholder="contoh: 800000"
         :value="value"
-        v-model="inputVal">
+        v-model.number="inputVal">
       </v-text-field>
     </div>
   </div>
@@ -23,6 +23,7 @@ export default {
   name: 'nominalInput',
   props: {
     value: {
+      type: Number,
 			default: null
 		},
   },
