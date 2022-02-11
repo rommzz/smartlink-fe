@@ -5,7 +5,7 @@
         <span>komisi</span>
       </template>
       <template v-slot:body>
-        <div @click="modalNew()">
+        <div class="d-flex align-center" style="cursor: pointer" @click="modalNew()">
           <v-icon color="primary">
             mdi-plus-circle-outline
           </v-icon>
@@ -26,7 +26,7 @@
             <span class="" style="font-size: 14px"> 
               {{ item.nominal | formatNumber}}
             </span>
-            <v-icon class="ml-1" color="primary">
+            <v-icon class="ml-1" color="primary" @click="modalEdit(item.nama, item.nominal, index)">
               mdi-square-edit-outline
             </v-icon>
           </div>
@@ -43,7 +43,7 @@
         </div>
       </template>
     </base-card>
-    <modal-komisi ref="modal"/>
+    <modal-komisi ref="modal" @addData="v => addData(v)" @updateData="v => updateData(v)" @deleteData="()=> {deleteData()}"/>
   </div>
 </template>
 
@@ -62,7 +62,8 @@ export default {
   },
   data() {
     return {
-      data: {}
+      data: {},
+      index: null
     }
   },
   created() {
@@ -71,6 +72,19 @@ export default {
   methods: {
     modalNew() {
       this.$refs.modal.show(true, 0, null)
+    },
+    modalEdit(nama, nominal, index) {
+      this.index = index
+      this.$refs.modal.show(false, nominal, nama)
+    },
+    addData(v) {
+      this.data.komisi.push(v)
+    },
+    updateData(v) {
+      this.$set(this.data.komisi, this.index, v)
+    },
+    deleteData() {
+      this.data.komisi.splice(this.index, 1)
     }
   },
   computed: {

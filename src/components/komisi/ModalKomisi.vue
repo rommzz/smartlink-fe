@@ -22,7 +22,7 @@
     </div>
     <v-row class="mt-3">
       <v-col class="pr-0">
-        <v-btn @click="hari = 0" class="col-6 text-none" block outlined color="error">
+        <v-btn @click="isNew ? item = clearForm() : $emit('deleteData', true); $refs.modal.close()" class="col-6 text-none" block outlined color="error">
           Hapus
         </v-btn>
       </v-col>
@@ -46,24 +46,28 @@ export default {
   components: { baseModal, nominalInput},
   data () {
     return{
-      nominal: 0,
-      nama: 0,
+      nominal: null,
+      nama: null,
       isNew: true
     }
   },
   methods: {
-    show(isNew, nominal, periode) {
-      this.nominal = isNew ? 0 : nominal
-      this.nama = isNew ? null : periode
+    show(isNew, nominal, nama) {
+      this.nominal = isNew ? null : nominal
+      this.nama = isNew ? null : nama
+      this.isNew = isNew
       this.$refs.modal.show()
     },
     save() {
       const data = {
         nominal: this.nominal,
         nama: this.nama,
-        isNew: this.isNew
       }
-      this.$emit('savedata', data)
+      if (this.isNew) {
+        this.$emit('addData', data)
+      } else {
+        this.$emit('updateData', data)
+      }
       this.$refs.modal.close()
     }
   }
