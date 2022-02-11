@@ -3,7 +3,7 @@
     <div>
       Nominal
       <div class="d-flex align-center">
-        <nominal-input style="width: 50%" v-model="nominal"></nominal-input> 
+        <nominal-input type="number" style="width: 50%" v-model="nominal"></nominal-input> 
         <div>
           <v-icon small>
             mdi-close
@@ -51,11 +51,7 @@ export default {
       this.$refs.modal.show()
     },
     save() {
-      const data = {
-        nominal: this.nominal,
-        total_periode: this.total_periode
-      }
-      this.$emit('savedata', data)
+      this.$emit('savedata', this.nominal)
       this.$refs.modal.close()
     }
   }

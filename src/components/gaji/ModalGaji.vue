@@ -3,7 +3,7 @@
     <div>
       Nominal
       <div class="d-flex align-center">
-        <nominal-input style="width: 50%" v-model="nominal"></nominal-input> 
+        <nominal-input type="number" style="width: 50%" v-model="nominal"></nominal-input> 
         <div>
           <v-icon>
             mdi-close
@@ -27,12 +27,6 @@
         </div>
       </div>
       <v-row class="mt-3">
-        <v-col class="pr-0">
-          <v-btn @click="hari = 0" class="col-6 text-none" block outlined color="error">
-            Hapus
-          </v-btn>
-        </v-col>
-        <div class="pl-1" />
         <v-col class="pl-0">
           <v-btn class="col-6 text-none" block depressed color="primary" @click="save()">
             Simpan
@@ -68,6 +62,7 @@ export default {
         nominal: this.nominal,
         total_periode: this.total_periode
       }
+      console.log(data);
       this.$emit('savedata', data)
       this.$refs.modal.close()
     }

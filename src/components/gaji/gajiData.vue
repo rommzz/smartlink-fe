@@ -5,20 +5,20 @@
         <span>gaji</span>
       </template>
       <template v-slot:body>
-        <div v-for="(item, index) in data" :key="index" class="py-2 d-flex justify-space-between align-center">
+        <div v-for="(item, index) in data.pengaturan_gaji" :key="index" class="py-2 d-flex justify-space-between align-center">
           <div>
             <div class="black--text" style="line-height: 1;font-size: 14px">
               {{item.nama}}
             </div>
             <div class="mid-grey--text" style="line-height: 1; font-size: 12px">
-              {{ `${item.nominal} x ${item.id == 1 ? total_periode : total_kehadiran} ${item.jenis}` }} 
+              {{ `${item.nominal} x ${item.id == 1 ? '1' : data.total_kehadiran} ${item.jenis}` }} 
             </div>
           </div>
           <div>
             <span class="black--text" style="font-size: 14px"> 
               {{ valueGaji(item.nominal, item.id) | formatNumber }}
             </span>
-            <v-icon class="ml-1" color="primary" @click="item.id == 1 ? showModalGaji(item.nominal, total_periode, index) : showModalAkomodasi(item.nominal, index)">
+            <v-icon class="ml-1" color="primary" @click="item.id == 1 ? showModalGaji(item.nominal, data.total_periode, index) : showModalAkomodasi(item.nominal, index)">
               mdi-square-edit-outline
             </v-icon>
           </div>
@@ -35,8 +35,8 @@
         </div>
       </template>
     </base-card>
-    <modal-gaji ref="modalGaji" @savedata="v => { data[index].nominal = v.nominal; total_periode = v.total_periode;  }"/>
-    <modal-akomodasi ref="modalAkomodasi" @savedata="v => { data[index].nominal = v.nominal; total_periode = v.total_periode;  }"/>
+    <modal-gaji ref="modalGaji" @savedata="v => { data.pengaturan_gaji[index].nominal = v.nominal; data.total_periode = v.total_periode;  }"/>
+    <modal-akomodasi ref="modalAkomodasi" @savedata="v => { data.pengaturan_gaji[index].nominal = v}"/>
   </div>
 </template>
 
@@ -49,33 +49,23 @@ export default {
   components: { BaseCard, ModalGaji, ModalAkomodasi },
   props: {
     propsData: {
-      type: Array,
-      default: () => []
+      type: Object,
+      default: () => {}
     },
-    propsKehadiran: {
-      type: Number,
-      default: 0
-    },
-    propsPeriode: {
-      type: Number,
-      default: 0
-    }
   },
   data () {
     return{
-      data: [],
-      total_kehadiran: 0,
-      total_periode: 0,
+      data: {},
       index: null
     }
   },
   methods: {
     valueGaji (v, id) {
       if (id == 1) {
-        return parseInt(v * this.total_periode)
+        return parseInt(v * this.data.total_periode)
       }
       else {
-        return parseInt(v * this.total_kehadiran )
+        return parseInt(v * this.data.total_kehadiran )
       }
     },
     showModalGaji (nominal, periode, index) {
@@ -85,7 +75,7 @@ export default {
     showModalAkomodasi (nominal, index) {
       console.log(this.total_kehadiran);
       this.index = index
-      this.$refs.modalAkomodasi.show(nominal, this.total_kehadiran)
+      this.$refs.modalAkomodasi.show(nominal, this.data.total_kehadiran)
     }
   },
   computed: {
@@ -100,8 +90,6 @@ export default {
   },
   created() {
     this.data = this.propsData
-    this.total_kehadiran = this.propsKehadiran
-    this.total_periode = this.propsPeriode
   }
 }
 </script>
