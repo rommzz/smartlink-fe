@@ -35,50 +35,8 @@
 
       <borongan-data ref="gajiData" :propsData="{pengaturan_upah: data.pengaturan_upah, pengerjaan_upah: data.pengerjaan_upah}"/>
       
-      <base-card>
-        <template v-slot:header>
-          <span>komisi</span>
-        </template>
-        <template v-slot:body>
-          <div>
-            <v-icon color="primary">
-              mdi-plus-circle-outline
-            </v-icon>
-            <span class="primary--text">
-              Tambah komisi lain...
-            </span>
-          </div>
-          <div v-for="(item, index) in data.komisi" :key="index" class="py-2 d-flex justify-space-between align-center">
-            <div class="pr-2">
-              <div class="black--text text-capitalize" style="font-size: 14px">
-                {{ item.nama }}
-              </div>
-              <div class="mid-grey--text" style="line-height: 0.5; font-size: 12px">
-                {{ item.nominal }} 
-              </div>
-            </div>
-            <div class="">
-              <span class="" style="font-size: 14px"> 
-                {{ item.nominal | formatNumber}}
-              </span>
-              <v-icon class="ml-1" color="primary">
-                mdi-square-edit-outline
-              </v-icon>
-            </div>
-          </div>
-        </template>
-        <template v-slot:footer>
-          <div class="d-flex justify-space-between">
-            <span class="title-card" style="font-weight: 600">
-              subtotal Komisi
-            </span>
-            <span class="title-card" style="font-weight: 600">
-              {{ subtotalKomisi() | formatRupiah}}
-            </span>
-          </div>
-        </template>
-      </base-card>
-
+      <komisi-data :propsData="data"></komisi-data>
+      
       <v-card class="elevation-1 rounded-0 mb-5">
         <v-card-text class="d-flex justify-space-between secondary--text text-capitalize title-card" style="font-weight: 600">
           <span>
@@ -178,10 +136,11 @@ import ModalKehadiran from '../components/ModalKehadiran.vue'
 import '@/plugins/filter'
 import gajiData from "@/components/gaji/gajiData.vue"
 import BoronganData from '../components/borongan/BoronganData.vue'
+import KomisiData from "../components/komisi/KomisiData.vue"
 
 export default {
   name: 'Inquiry',
-  components: { baseCard, ModalKehadiran, gajiData, BoronganData },
+  components: { baseCard, ModalKehadiran, gajiData, BoronganData, KomisiData },
   data () {
     return {
       data: {},

@@ -9,7 +9,7 @@
         dense
         hide-details
         outlined
-        :type="type"
+        type="number"
         placeholder="contoh: 800000"
         :value="value"
         v-model="inputVal">
@@ -25,10 +25,6 @@ export default {
     value: {
 			default: null
 		},
-    type: {
-      type: String,
-      default: ''
-    }
   },
   computed: {
     inputVal: {

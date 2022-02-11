@@ -26,10 +26,10 @@
     <template v-slot:footer>
       <div class="d-flex justify-space-between">
         <span class="title-card" style="font-weight: 600">
-          subtotal Gaji
+          subtotal Upah
         </span>
         <span class="title-card" style="font-weight: 600">
-          {{ subtotalUpah() | formatRupiah}}
+          {{ subtotalUpah | formatRupiah}}
         </span>
       </div>
     </template>
@@ -59,13 +59,11 @@ export default {
     pengerjaan_upah (id) {
       return this.data.pengerjaan_upah.find(x => x.pengaturan_upah_id === id);
     },
+  },
+  computed: {
     subtotalUpah() {
-      let total = 0
-      this.data.pengaturan_upah.forEach(item => {
-        total = total + (this.pengerjaan_upah(item.id).nominal * item.nominal)
-      });
-      return total
-    },
+      return this.$store.state.inquiry.subtotalUpah
+    }
   }
 }
 </script>
