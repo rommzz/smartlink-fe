@@ -30,45 +30,11 @@
           </div>
         </template>
       </base-card>
+
+      <gaji-data ref="gajiData" :propsData="data"/>
+
+      <borongan-data ref="gajiData" :propsData="{pengaturan_upah: data.pengaturan_upah, pengerjaan_upah: data.pengerjaan_upah}"/>
       
-      <gaji-data ref="gajiData" :propsData="data.pengaturan_gaji" :propsKehadiran="data.total_kehadiran" :propsPeriode="data.total_periode"/>
-
-      <base-card>
-        <template v-slot:header>
-          <span>upah borongan</span>
-        </template>
-        <template v-slot:body>
-          <div v-for="(item, index) in data.pengaturan_upah" :key="index" class="py-2 d-flex justify-space-between align-center">
-            <div>
-              <div class="black--text text-capitalize" style="line-height: 1; font-size: 14px">
-                {{ item.nama }}
-              </div>
-              <div class="mid-grey--text" style="line-height: 1;; font-size: 12px">
-                {{ pengerjaan_upah(item.id).nominal + ' ' + pengerjaan_upah(item.id).satuan }} 
-              </div>
-            </div>
-            <div>
-              <span class="black--text" style="font-size: 14px"> 
-                {{ (pengerjaan_upah(item.id).nominal * item.nominal) | formatNumber }}
-              </span>
-              <v-icon class="ml-1" color="primary">
-                mdi-square-edit-outline
-              </v-icon>
-            </div>
-          </div>
-        </template>
-        <template v-slot:footer>
-          <div class="d-flex justify-space-between">
-            <span class="title-card" style="font-weight: 600">
-              subtotal Gaji
-            </span>
-            <span class="title-card" style="font-weight: 600">
-              {{ subtotalUpah() | formatRupiah}}
-            </span>
-          </div>
-        </template>
-      </base-card>
-
       <base-card>
         <template v-slot:header>
           <span>komisi</span>
@@ -211,11 +177,11 @@ import baseCard from "../components/BaseCard.vue"
 import ModalKehadiran from '../components/ModalKehadiran.vue'
 import '@/plugins/filter'
 import gajiData from "@/components/gaji/gajiData.vue"
-
+import BoronganData from '../components/borongan/BoronganData.vue'
 
 export default {
   name: 'Inquiry',
-  components: { baseCard, ModalKehadiran, gajiData },
+  components: { baseCard, ModalKehadiran, gajiData, BoronganData },
   data () {
     return {
       data: {},
@@ -258,7 +224,7 @@ export default {
     },
     valueGaji (v, id) {
       if (id == 1) {
-        return parseInt(v)
+        return parseInt(v * this.data.total_periode)
       }
       else {
         return parseInt(v * this.data.total_kehadiran )
@@ -272,6 +238,7 @@ export default {
       this.data.pengaturan_gaji.forEach(el => {
         total = total + this.valueGaji(el.nominal, el.id)
       });
+      this.$store.commit('SET_SUBTOTAL_GAJI', total)
       return total
     },
     subtotalUpah() {
