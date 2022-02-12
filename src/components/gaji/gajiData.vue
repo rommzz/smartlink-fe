@@ -18,7 +18,7 @@
             <span class="black--text" style="font-size: 14px"> 
               {{ valueGaji(item.nominal, item.id) | formatNumber }}
             </span>
-            <v-icon class="ml-1" color="primary" @click="item.id == 1 ? showModalGaji(item.nominal, data.total_periode, index) : showModalAkomodasi(item.nominal, index)">
+            <v-icon v-if="!readOnly" class="ml-1" color="primary" @click="item.id == 1 ? showModalGaji(item.nominal, data.total_periode, index) : showModalAkomodasi(item.nominal, index)">
               mdi-square-edit-outline
             </v-icon>
           </div>
@@ -52,6 +52,10 @@ export default {
       type: Object,
       default: () => {}
     },
+    readOnly: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return{

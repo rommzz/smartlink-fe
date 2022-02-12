@@ -5,7 +5,7 @@
         <span>komisi</span>
       </template>
       <template v-slot:body>
-        <div class="d-flex align-center" style="cursor: pointer" @click="modalNew()">
+        <div v-if="!readOnly" class="d-flex align-center" style="cursor: pointer" @click="modalNew()">
           <v-icon color="primary">
             mdi-plus-circle-outline
           </v-icon>
@@ -26,7 +26,7 @@
             <span class="" style="font-size: 14px"> 
               {{ item.nominal | formatNumber}}
             </span>
-            <v-icon class="ml-1" color="primary" @click="modalEdit(item.nama, item.nominal, index)">
+            <v-icon v-if="!readOnly" class="ml-1" color="primary" @click="modalEdit(item.nama, item.nominal, index)">
               mdi-square-edit-outline
             </v-icon>
           </div>
@@ -58,6 +58,10 @@ export default {
     propsData: {
       type: Object,
       default: () => {}
+    },
+    readOnly: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

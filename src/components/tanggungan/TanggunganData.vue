@@ -3,14 +3,14 @@
     <base-card>
       <template v-slot:header>
         <span>tanggungan</span>
-        <div style="line-height: 1">
+        <div v-if="!readOnly" style="line-height: 1">
           <span class="mid-grey--text" style="line-height: 1; font-size: 12px; font-weight: normal">
-            karyawan ini memiliki tanggungan
+            {{subtotalTanggungan ? 'karyawan ini memiliki tanggungan ' : 'Karyawan ini tidak memiliki tanggunan'}} {{ subtotalTanggungan | formatRupiah }}
           </span>
         </div>
       </template>
       <template v-slot:body>
-        <div class="d-flex align-center" style="cursor: pointer" @click="modalNew()">
+        <div v-if="!readOnly" class="d-flex align-center" style="cursor: pointer" @click="modalNew()">
           <v-icon color="primary">
             mdi-plus-circle-outline
           </v-icon>
@@ -31,7 +31,7 @@
             <span class="" style="font-size: 14px"> 
               {{ item.nominal | formatNumber }}
             </span>
-            <v-icon @click="modalEdit(item, index)" class="ml-1" color="error">
+            <v-icon v-if="!readOnly" @click="modalEdit(item, index)" class="ml-1" color="error">
               mdi-square-edit-outline
             </v-icon>
           </div>
@@ -63,6 +63,10 @@ export default {
     propsData: {
       type: Object,
       default: () => {}
+    },
+    readOnly: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

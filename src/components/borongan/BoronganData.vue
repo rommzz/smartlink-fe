@@ -17,7 +17,7 @@
           <span class="black--text" style="font-size: 14px"> 
             {{ (pengerjaan_upah(item.id).nominal * item.nominal) | formatNumber }}
           </span>
-          <v-icon class="ml-1" color="grey lighten-2">
+          <v-icon v-if="!readOnly" class="ml-1" color="grey lighten-2">
             mdi-cancel
           </v-icon>
         </div>
@@ -45,6 +45,10 @@ export default {
     propsData: {
       type: Object,
       default: () => {}
+    },
+    readOnly: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
