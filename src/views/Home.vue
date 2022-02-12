@@ -71,6 +71,8 @@
             class="text-none"
             color="primary"
             block
+            :loading="nextLoading"
+            @click="next()"
           >
             Berikutnya
           </v-btn>
@@ -98,33 +100,15 @@ export default {
   data () {
     return {
       data: {},
-      isloading: true
+      isloading: false,
+      nextLoading: false
     }
   },
   methods: {
     async getData () {
       this.isloading = true
       await Axios.get('/inquiry').then(r => {
-        console.log(r);
         this.data = r.data.data
-        this.data.tanggungan = [
-          {
-            nama: 'Ganti Barang Hilang',
-            nominal: 50000,
-            keterangan: 'Baju yang hilang warna merah'
-          },
-          {
-            nama: 'Denda Keterlambatan',
-            nominal: 20000,
-            keterangan: 'karena terlambat 3 hari berturut - turut '
-          }
-        ]
-        this.data.komisi = [
-          {
-            nama: 'Bonus Target 1',
-            nominal: 20000
-          }
-        ]
         this.$store.commit('SET_SUBTOTAL_GAJI', this.subtotalGaji())
         this.$store.commit('SET_SUBTOTAL_UPAH', this.subtotalUpah())
         this.$store.commit('SET_SUBTOTAL_KOMISI', this.subtotalKomisi())
@@ -133,6 +117,18 @@ export default {
         console.log(e);
       }).finally(() => {
         this.isloading = false
+      })
+    },
+    next() {
+      this.nextLoading = true
+      Axios.get('/bank').then(r => {
+        this.$store.commit('SET_DATA', this.data)
+        this.$store.commit('SET_REKENING_LIST', r.data.data)
+        this.$router.push({ path: '/detail' })
+      }).catch(e => {
+        console.log(e);
+      }).finally(() => {
+        this.nextLoading = false
       })
     },
     valueGaji (v, id) {
@@ -186,7 +182,13 @@ export default {
     }
   },
   async created () {
-    await this.getData()
+    if (Object.keys(this.$store.state.data).length) {
+       this.data = this.$store.state.data
+       console.log(true);
+    }
+    else {
+      await this.getData()
+    }
   }
 
 }

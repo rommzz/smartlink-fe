@@ -10,7 +10,9 @@ export default new Vuex.Store({
       subtotalUpah: 0,
       subtotalKomisi: 0,
       tanggungan: 0,
-    }
+    },
+    data: {},
+    rekening: []
   },
   mutations: {
     SET_SUBTOTAL_GAJI(state, value) {
@@ -25,6 +27,12 @@ export default new Vuex.Store({
     SET_SUBTOTAL_TANGGUNGAN(state, value) {
       state.inquiry.tanggungan = value;
     },
+    SET_DATA(state, value) {
+      state.data = value
+    },
+    SET_REKENING_LIST(state, value) {
+      state.rekening = value
+    }
   },
   actions: {
   },
