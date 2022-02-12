@@ -67,6 +67,7 @@
     <v-card class="rounded-0 elevation-1">
       <v-card-text>
         <v-form
+          :disabled="posting"
           ref="form"
           v-model="valid"
           lazy-validation
@@ -154,13 +155,14 @@
                 hide-details
                 outlined
                 min="1"
-                placeholder="Nama Komisi"
+                placeholder="Pilih Tanggal"
                 v-model="data.keterangan">
               </v-text-field>
             </div>
           </div>
           <div class="py-5"/>
           <v-btn
+            :loading="posting"
             color="primary"
             depressed
             block
@@ -187,7 +189,8 @@ export default {
       valid: true,
       rule: [
         v => !!v || 'Wajib diisi',
-      ]
+      ],
+      posting: false
     }
   },
   methods: {
@@ -195,16 +198,24 @@ export default {
       if (!this.$refs.form.validate()) {
         return
       }
-      console.log(this.data);
-      const config = {
-        headers: {
-          'accept': '*/*'
+      this.posting = true
+      Axios.post('/save', (this.data)).then(r => {
+        if (r.data.success) {
+          this.$store.commit('SET_DATA_FAKTUR', r.data.data)
+          this.$router.push({
+            path: '/faktur',
+          })
         }
-      }
-      Axios.post('/save', (this.data), config).then(r => {
+        else {
+          this.$snackbar({
+            text: r.data.messages
+          })
+        }
         console.log(r);
       }).catch(e => {
         console.log(e);
+      }).finally(() => {
+        this.posting = false
       })
     }
   },

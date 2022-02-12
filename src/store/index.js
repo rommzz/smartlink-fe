@@ -12,6 +12,7 @@ export default new Vuex.Store({
       tanggungan: 0,
     },
     data: {},
+    faktur: {},
     rekening: []
   },
   mutations: {
@@ -32,6 +33,9 @@ export default new Vuex.Store({
     },
     SET_REKENING_LIST(state, value) {
       state.rekening = value
+    },
+    SET_DATA_FAKTUR(state, value) {
+      state.faktur = value
     }
   },
   actions: {
