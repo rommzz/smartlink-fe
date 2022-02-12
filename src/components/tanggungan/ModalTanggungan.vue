@@ -1,5 +1,5 @@
 <template>
-  <base-modal ref="modal" :header="(isNew ? 'tambah' : 'ubah') + ' Komisi'">
+  <base-modal ref="modal" header="Bayar tanggungan/denda">
     <div>
       <div class="pb-4">
         Nama Komisi
